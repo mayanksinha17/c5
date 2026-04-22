@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Task Automator</title>
+    <link rel="stylesheet" href="np.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Personal Task Automator</h1>
+        <p>A simple AI-powered task manager that helps prioritize and remind you of tasks.</p>
+
+        <div class="task-form">
+            <h2>Add New Task</h2>
+            <input type="text" id="task-title" placeholder="Task Title" required>
+            <textarea id="task-desc" placeholder="Description"></textarea>
+            <input type="date" id="task-deadline">
+            <select id="task-priority">
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+            </select>
+            <button id="add-task-btn">Add Task</button>
+        </div>
+
+        <div class="controls">
+            <button id="automate-btn">Automate & Sort Tasks</button>
+            <button id="clear-btn">Clear All Tasks</button>
+        </div>
+
+        <div class="task-list">
+            <h2>Your Tasks</h2>
+            <ul id="tasks"></ul>
+        </div>
+
+        <div id="reminders" class="reminders">
+            <h2>AI Reminders</h2>
+            <p id="reminder-text">No urgent reminders yet.</p>
+        </div>
+    </div>
+
+    <script src="np.js"></script>
+</body>
+</html>
