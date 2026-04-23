@@ -9,6 +9,7 @@ const taskPriority = document.getElementById('task-priority');
 const addTaskBtn = document.getElementById('add-task-btn');
 const automateBtn = document.getElementById('automate-btn');
 const clearBtn = document.getElementById('clear-btn');
+const viewStatsBtn = document.getElementById('view-stats-btn');
 const tasksList = document.getElementById('tasks');
 const reminderText = document.getElementById('reminder-text');
 
@@ -112,6 +113,11 @@ clearBtn.addEventListener('click', () => {
         renderTasks();
         reminderText.textContent = 'No urgent reminders yet.';
     }
+});
+
+// View task statistics
+viewStatsBtn.addEventListener('click', () => {
+    window.location.href = 'tasks.html';
 });
 
 // Save to localStorage

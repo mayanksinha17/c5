@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Statistics - Personal Task Automator</title>
+    <link rel="stylesheet" href="np.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Task Statistics</h1>
+        <p>Overview of your tasks and progress.</p>
+
+        <div class="stats">
+            <h2>Statistics</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <h3>Total Tasks</h3>
+                    <p id="total-tasks">0</p>
+                </div>
+                <div class="stat-item">
+                    <h3>Completed Tasks</h3>
+                    <p id="completed-tasks">0</p>
+                </div>
+                <div class="stat-item">
+                    <h3>Pending Tasks</h3>
+                    <p id="pending-tasks">0</p>
+                </div>
+                <div class="stat-item">
+                    <h3>High Priority</h3>
+                    <p id="high-priority">0</p>
+                </div>
+                <div class="stat-item">
+                    <h3>Medium Priority</h3>
+                    <p id="medium-priority">0</p>
+                </div>
+                <div class="stat-item">
+                    <h3>Low Priority</h3>
+                    <p id="low-priority">0</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="task-list">
+            <h2>All Tasks</h2>
+            <ul id="tasks"></ul>
+        </div>
+
+        <div class="controls">
+            <button id="back-btn">Back to Main</button>
+        </div>
+    </div>
+
+    <script src="tasks.js"></script>
+</body>
+</html>
