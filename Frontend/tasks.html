@@ -41,6 +41,43 @@
             </div>
         </div>
 
+        <div class="analysis-section" id="analysis-section" style="display: none;">
+            <h2>📊 Overall Analysis</h2>
+            <div class="analysis-card productivity-card">
+                <h3>Productivity</h3>
+                <p id="productivity-text">Loading...</p>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="completion-bar" style="width: 0%"></div>
+                </div>
+                <p class="progress-label" id="completion-label">0% completion rate</p>
+            </div>
+
+            <div class="analysis-card improvements-card">
+                <h3>🔧 Areas for Improvement</h3>
+                <ul id="improvements-list">
+                    <li>Loading...</li>
+                </ul>
+            </div>
+
+            <div class="analysis-card resources-card">
+                <h3>📦 Expected Resources</h3>
+                <div class="resource-grid">
+                    <div class="resource-item">
+                        <span class="resource-label">⏱ Estimated Time</span>
+                        <span class="resource-value" id="est-time">—</span>
+                    </div>
+                    <div class="resource-item">
+                        <span class="resource-label">💡 Suggestion</span>
+                        <span class="resource-value" id="est-suggestion">—</span>
+                    </div>
+                    <div class="resource-item">
+                        <span class="resource-label">🎯 Daily Target</span>
+                        <span class="resource-value" id="est-daily">—</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="task-list">
             <h2>All Tasks</h2>
             <ul id="tasks"></ul>

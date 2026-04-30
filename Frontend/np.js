@@ -1,5 +1,8 @@
-// Load tasks from localStorage
-let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+// API Base URL
+const API_BASE = 'http://localhost:3001/api';
+
+// Load tasks from API
+let tasks = [];
 
 // DOM elements
 const taskTitle = document.getElementById('task-title');
@@ -13,18 +16,52 @@ const viewStatsBtn = document.getElementById('view-stats-btn');
 const tasksList = document.getElementById('tasks');
 const reminderText = document.getElementById('reminder-text');
 
+// API helper functions
+async function apiRequest(endpoint, options = {}) {
+    try {
+        const response = await fetch(`${API_BASE}${endpoint}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            },
+            ...options
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('API request failed:', error);
+        alert('Failed to connect to server. Please make sure the backend is running.');
+        throw error;
+    }
+}
+
+// Load tasks from API
+async function loadTasks() {
+    try {
+        tasks = await apiRequest('/tasks');
+        renderTasks();
+        updateReminders();
+    } catch (error) {
+        console.error('Failed to load tasks:', error);
+    }
+}
+
 // Function to render tasks
 function renderTasks() {
     tasksList.innerHTML = '';
-    tasks.forEach((task, index) => {
+    tasks.forEach((task) => {
         const li = document.createElement('li');
         li.className = task.priority;
         li.innerHTML = `
             <strong>${task.title}</strong> (${task.priority})
-            <br>${task.desc || 'No description'}
+            <br>${task.description || 'No description'}
             <br>Deadline: ${task.deadline || 'None'}
-            <br><button onclick="toggleComplete(${index})">${task.completed ? 'Mark Incomplete' : 'Mark Complete'}</button>
-            <button onclick="deleteTask(${index})">Delete</button>
+            <br><button onclick="toggleComplete(${task.id})">${task.completed ? 'Mark Incomplete' : 'Mark Complete'}</button>
+            <button onclick="deleteTask(${task.id})">Delete</button>
         `;
         if (task.completed) li.classList.add('completed');
         tasksList.appendChild(li);
@@ -32,55 +69,102 @@ function renderTasks() {
 }
 
 // Add task
-addTaskBtn.addEventListener('click', () => {
+addTaskBtn.addEventListener('click', async () => {
     if (!taskTitle.value.trim()) return alert('Please enter a task title.');
+
     const newTask = {
         title: taskTitle.value.trim(),
-        desc: taskDesc.value.trim(),
+        description: taskDesc.value.trim(),
         deadline: taskDeadline.value,
-        priority: taskPriority.value,
-        completed: false
+        priority: taskPriority.value
     };
-    tasks.push(newTask);
-    saveTasks();
-    renderTasks();
-    // Clear form
-    taskTitle.value = '';
-    taskDesc.value = '';
-    taskDeadline.value = '';
-    taskPriority.value = 'low';
+
+    try {
+        const createdTask = await apiRequest('/tasks', {
+            method: 'POST',
+            body: JSON.stringify(newTask)
+        });
+
+        tasks.push(createdTask);
+        renderTasks();
+        updateReminders();
+
+        // Clear form
+        taskTitle.value = '';
+        taskDesc.value = '';
+        taskDeadline.value = '';
+        taskPriority.value = 'low';
+    } catch (error) {
+        console.error('Failed to add task:', error);
+    }
 });
 
 // Toggle complete
-function toggleComplete(index) {
-    tasks[index].completed = !tasks[index].completed;
-    saveTasks();
-    renderTasks();
+async function toggleComplete(taskId) {
+    try {
+        await apiRequest(`/tasks/${taskId}/toggle`, { method: 'POST' });
+
+        // Update local array
+        const task = tasks.find(t => t.id === taskId);
+        if (task) {
+            task.completed = !task.completed;
+        }
+
+        renderTasks();
+        updateReminders();
+    } catch (error) {
+        console.error('Failed to toggle task:', error);
+    }
 }
 
 // Delete task
-function deleteTask(index) {
-    tasks.splice(index, 1);
-    saveTasks();
-    renderTasks();
+async function deleteTask(taskId) {
+    if (!confirm('Are you sure you want to delete this task?')) return;
+
+    try {
+        await apiRequest(`/tasks/${taskId}`, { method: 'DELETE' });
+
+        // Remove from local array
+        tasks = tasks.filter(t => t.id !== taskId);
+        renderTasks();
+        updateReminders();
+    } catch (error) {
+        console.error('Failed to delete task:', error);
+    }
 }
 
-// Automate: Sort by priority and deadline, show reminders
-automateBtn.addEventListener('click', () => {
-    // Sort: High priority first, then by deadline
-    tasks.sort((a, b) => {
-        const priorityOrder = { high: 3, medium: 2, low: 1 };
-        if (priorityOrder[a.priority] !== priorityOrder[b.priority]) {
-            return priorityOrder[b.priority] - priorityOrder[a.priority];
-        }
-        if (a.deadline && b.deadline) {
-            return new Date(a.deadline) - new Date(b.deadline);
-        }
-        return a.deadline ? -1 : 1;
-    });
-    saveTasks();
-    renderTasks();
+// Automate: Sort tasks and show reminders
+automateBtn.addEventListener('click', async () => {
+    try {
+        await apiRequest('/tasks/sort', { method: 'POST' });
+        await loadTasks(); // Reload tasks after sorting
+        updateReminders();
+    } catch (error) {
+        console.error('Failed to sort tasks:', error);
+    }
+});
 
+// Clear all tasks
+clearBtn.addEventListener('click', async () => {
+    if (!confirm('Are you sure you want to clear all tasks?')) return;
+
+    try {
+        await apiRequest('/tasks', { method: 'DELETE' });
+        tasks = [];
+        renderTasks();
+        reminderText.textContent = 'No urgent reminders yet.';
+    } catch (error) {
+        console.error('Failed to clear tasks:', error);
+    }
+});
+
+// View task statistics
+viewStatsBtn.addEventListener('click', () => {
+    window.location.href = 'tasks.html';
+});
+
+// Update reminders function
+function updateReminders() {
     // AI Reminders: Check for urgent tasks (high priority or deadline within 2 days)
     const now = new Date();
     const urgentTasks = tasks.filter(task => {
@@ -103,26 +187,6 @@ automateBtn.addEventListener('click', () => {
     } else {
         reminderText.textContent = 'No urgent reminders. Great job staying on top!';
     }
-});
-
-// Clear all tasks
-clearBtn.addEventListener('click', () => {
-    if (confirm('Are you sure you want to clear all tasks?')) {
-        tasks = [];
-        saveTasks();
-        renderTasks();
-        reminderText.textContent = 'No urgent reminders yet.';
-    }
-});
-
-// View task statistics
-viewStatsBtn.addEventListener('click', () => {
-    window.location.href = 'tasks.html';
-});
-
-// Save to localStorage
-function saveTasks() {
-    localStorage.setItem('tasks', JSON.stringify(tasks));
 }
 
 // Request notification permission on load
@@ -130,5 +194,5 @@ if ('Notification' in window && Notification.permission === 'default') {
     Notification.requestPermission();
 }
 
-// Initial render
-renderTasks();
+// Initial load
+loadTasks();

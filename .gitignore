@@ -1,0 +1,7 @@
+# Ignore node modules and generated files
+Frontend/backend/node_modules/
+Frontend/backend/tasks.db
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store

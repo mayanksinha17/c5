@@ -139,3 +139,112 @@ h1, h2 {
     font-weight: bold;
     color: #333;
 }
+
+/* Analysis Section */
+.analysis-section {
+    margin: 25px 0;
+}
+
+.analysis-section h2 {
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.analysis-card {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 18px;
+    margin-bottom: 15px;
+}
+
+.analysis-card h3 {
+    margin: 0 0 12px 0;
+    font-size: 16px;
+    color: #444;
+}
+
+.productivity-card {
+    border-left: 5px solid #007bff;
+}
+
+.improvements-card {
+    border-left: 5px solid #ffc107;
+}
+
+.resources-card {
+    border-left: 5px solid #28a745;
+}
+
+/* Progress Bar */
+.progress-bar-container {
+    background: #e9ecef;
+    border-radius: 10px;
+    height: 20px;
+    overflow: hidden;
+    margin: 10px 0 5px;
+}
+
+.progress-bar {
+    height: 100%;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #28a745, #20c997);
+    transition: width 0.6s ease;
+}
+
+.progress-label {
+    font-size: 13px;
+    color: #666;
+    margin: 0;
+}
+
+/* Improvements List */
+.improvements-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.improvements-card li {
+    padding: 8px 12px;
+    margin: 5px 0;
+    background: #fff;
+    border-radius: 4px;
+    border: 1px solid #eee;
+    font-size: 14px;
+    color: #555;
+}
+
+.improvements-card li::before {
+    content: '• ';
+    color: #ffc107;
+    font-weight: bold;
+}
+
+/* Resource Grid */
+.resource-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+}
+
+.resource-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px 12px;
+    background: #fff;
+    border-radius: 4px;
+    border: 1px solid #eee;
+}
+
+.resource-label {
+    font-size: 13px;
+    font-weight: bold;
+    color: #666;
+}
+
+.resource-value {
+    font-size: 14px;
+    color: #333;
+}
